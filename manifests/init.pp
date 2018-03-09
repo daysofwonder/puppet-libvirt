@@ -21,6 +21,7 @@
 #
 class libvirt (
   $defaultnetwork            = false,
+  $defaultnetworkip          = $::libvirt::params::default_ip,
   $networks                  = {},
   $networks_defaults         = {},
   $virtinst                  = true,
@@ -109,15 +110,15 @@ class libvirt (
 
   # The default network, automatically configured... disable it by default
   $def_net = $defaultnetwork? {
-    true    => 'enabled',
-    default => 'absent',
+    true       => 'enabled',
+    default    => 'absent',
   }
   libvirt::network { 'default':
     ensure       => $def_net,
     autostart    => true,
     forward_mode => 'nat',
     bridge       => 'virbr0',
-    ip           => [ $::libvirt::params::default_ip ],
+    ip           => [ $defaultnetworkip ],
   }
 
   # The most useful libvirt-related packages
