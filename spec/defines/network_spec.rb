@@ -18,6 +18,9 @@ describe 'libvirt::network' do
   network_dir = '/etc/libvirt/qemu/networks'
   autostart_dir = "#{network_dir}/autostart"
 
+  let(:pre_condition) { 'include ::libvirt' }
+  let(:facts) { {'osfamily' => 'Debian', 'service_provider' => 'systemd', 'operatingsystem' => 'Debian', 'operatingsystemmajrelease' => '9'} }
+
   let(:title) { 'direct-net' }
   let(:params) {{ :forward_mode => 'bridge', :forward_dev => 'eth0', :forward_interfaces => [ 'eth0', ] }}
 
@@ -66,6 +69,44 @@ EOF",
 EOF",
   })}
   end
+
+  context 'static host dhcp network' do
+    let(:title) { 'pxe' }
+    dhcp = {
+      'start' => '192.168.122.2',
+      'end'   => '192.168.122.124',
+      'host'  => [
+        { 'mac' => 'aa:bb:cc:dd:ee:ff', 'ip' => '192.168.122.150'},
+        { 'mac' => '11:22:33:44:55:66', 'ip' => '192.168.122.151'}
+      ]
+    }
+    ip = {
+      'address' => '192.168.122.1',
+      'netmask' => '255.255.255.0',
+      'dhcp'    => dhcp,
+    }
+    let(:params) {{ :forward_mode => 'nat', :forward_dev => 'virbr0', :bridge => 'virbr0', :ip => [ ip ] }}
+
+    it { should contain_libvirt__network('pxe').with({ 'ensure' => 'present'} )}
+    it { should contain_exec("create-#{network_dir}/pxe.xml").with({
+    'command' => "cat > #{network_dir}/pxe.xml <<EOF
+<network>
+  <name>pxe</name>
+  <forward dev='virbr0' mode='nat'/>
+  <bridge name='virbr0' stp='on' delay='0'/>
+  <ip address='192.168.122.1' netmask='255.255.255.0'>
+    <dhcp>
+      <range start='192.168.122.2' end='192.168.122.124'/>
+      <host mac='aa:bb:cc:dd:ee:ff' ip='192.168.122.150'/>
+      <host mac='11:22:33:44:55:66' ip='192.168.122.151'/>
+    </dhcp>
+  </ip>
+</network>
+
+EOF",
+  })}
+  end
+
 
   context 'dual stack' do
     let(:title) { 'dual-stack' }

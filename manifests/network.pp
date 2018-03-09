@@ -33,6 +33,9 @@
 #   start      => '192.168.122.2',
 #   end        => '192.168.122.254',
 #   bootp_file => 'pxelinux.0',
+#   host       => [
+#     { 'mac' => 'aa:bb:cc:dd:ee:ff', 'ip' => '192.168.122.37'},
+#   ]
 # }
 # $pxe_ip = {
 #   'address' => '192.168.122.2'
@@ -89,7 +92,7 @@ define libvirt::network (
     path        => '/bin:/usr/bin',
     user        => 'root',
     provider    => 'posix',
-    require     => Service[$::libvirt::libvirt_service],
+    require     => Service[$::libvirt::params::libvirt_service],
     environment => ['LC_ALL=en_US.utf8', ],
   }
 

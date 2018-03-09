@@ -27,6 +27,11 @@
       <%-if dhcp['bootp_file']-%>
       <bootp file='<%= dhcp['bootp_file'] -%>'<%-if dhcp['bootp_server']-%> server='<%=dhcp['bootp_server']-%>'<%-end-%>/>
       <%-end-%>
+      <%-if dhcp['host']-%>
+      <%- dhcp['host'].each do |v| -%>
+      <host mac='<%= v['mac'] %>' ip='<%= v['ip'] %>'/>
+      <%- end -%>
+      <%-end-%>
     </dhcp>
   </ip>
     <%- end-%>

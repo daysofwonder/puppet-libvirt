@@ -4,6 +4,8 @@
 #
 class libvirt::params {
 
+  $unix_sock_dir = '/var/run/libvirt'
+
   case $::osfamily {
     'RedHat': {
       $libvirt_package = "libvirt.${::architecture}"
@@ -18,6 +20,11 @@ class libvirt::params {
       $defaults_file = '/etc/sysconfig/libvirtd'
       $defaults_template = "${module_name}/sysconfig/libvirtd.erb"
       $deb_default = false
+      $unix_sock_group = 'libvirt'
+      $auth_unix_ro = 'none'
+      $unix_sock_ro_perms = 'none'
+      $unix_sock_rw_perms = '0770'
+      $auth_unix_rw = 'none'
     }
     'Debian': {
       $libvirt_package = 'libvirt-bin'
@@ -54,6 +61,7 @@ class libvirt::params {
       $sysconfig = false
       $deb_default = false
       $unix_sock_dir = '/var/run/libvirt'
+      $unix_sock_group = 'libvirt'
     }
   }
 
