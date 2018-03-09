@@ -62,6 +62,9 @@ class libvirt (
   $sasl2_qemu_mech_list      = undef,
   $sasl2_qemu_keytab         = undef,
   $sasl2_qemu_auxprop_plugin = undef,
+  $key_file                  = "${::settings::privatekeydir}/${::fqdn}.pem",
+  $cert_file                 = "${::settings::certdir}/${::fqdn}.pem",
+  $ca_file                   = "${::settings::certdir}/ca.pem",
 ) inherits ::libvirt::params {
 
   package { 'libvirt':

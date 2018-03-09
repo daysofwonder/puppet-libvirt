@@ -207,18 +207,19 @@ auth_tls = "<%= @auth_tls %>"
 # TLS x509 certificate configuration
 #
 
-
+<% if @listen_tls == true -%>
 # Override the default server key file path
 #
-#key_file = "/etc/pki/libvirt/private/serverkey.pem"
+key_file = "<%= @key_file %>""
 
 # Override the default server certificate file path
 #
-#cert_file = "/etc/pki/libvirt/servercert.pem"
+cert_file = "<%= @cert_file %>"
 
 # Override the default CA certificate path
 #
-#ca_file = "/etc/pki/CA/cacert.pem"
+ca_file = "<%= @ca_file %>"
+<% end %>
 
 # Specify a certificate revocation list.
 #
