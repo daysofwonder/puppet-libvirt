@@ -22,12 +22,17 @@ class libvirt::params {
       $deb_default = false
       $unix_sock_group = 'libvirt'
       $auth_unix_ro = 'none'
-      $unix_sock_ro_perms = 'none'
+      $unix_sock_ro_perms = '0777'
       $unix_sock_rw_perms = '0770'
       $auth_unix_rw = 'none'
     }
     'Debian': {
-      $libvirt_package = 'libvirt-bin'
+      $libvirt_package = $::operatingsystemmajrelease ? {
+        6 => 'libvirt-bin',
+        7 => 'libvirt-bin',
+        8 => 'libvirt-bin',
+        9 => 'libvirt-daemon-system'
+      }
       $virtinst_package = 'virtinst'
       $radvd_package = 'radvd'
       $sysconfig = false
@@ -39,7 +44,7 @@ class libvirt::params {
       }
       # UNIX socket
       $auth_unix_ro = 'none'
-      $unix_sock_ro_perms = 'none'
+      $unix_sock_ro_perms = '0777'
       $unix_sock_rw_perms = '0770'
       $auth_unix_rw = 'none'
       case $::operatingsystem {
