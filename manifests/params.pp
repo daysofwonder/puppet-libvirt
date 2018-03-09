@@ -31,7 +31,7 @@ class libvirt::params {
         6 => 'libvirt-bin',
         7 => 'libvirt-bin',
         8 => 'libvirt-bin',
-        9 => 'libvirt-daemon-system'
+        default => 'libvirt-daemon-system'
       }
       $virtinst_package = 'virtinst'
       $radvd_package = 'radvd'
